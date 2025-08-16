@@ -17,26 +17,30 @@ st.set_page_config(
     layout="wide"
 )
 
-def calculate_correlation_metrics(x, y):
-    """Calculate various correlation metrics"""
-    # Pearson correlation
-    pearson_r, pearson_p = stats.pearsonr(x, y)
+def calculate_correlation_and_regression(x, y):
+    """Calculate correlation coefficient and regression equation"""
+    # Simple correlation coefficient (Pearson)
+    correlation_r, _ = stats.pearsonr(x, y)
     
-    # Spearman correlation
-    spearman_r, spearman_p = stats.spearmanr(x, y)
-    
-    # R-squared from linear regression
+    # Linear regression for equation
     lr = LinearRegression()
     X_reshaped = x.values.reshape(-1, 1)
     lr.fit(X_reshaped, y)
-    r_squared = lr.score(X_reshaped, y)
+    
+    slope = lr.coef_[0]
+    intercept = lr.intercept_
+    
+    # Format regression equation
+    if intercept >= 0:
+        equation = f"y = {slope:.3f}x + {intercept:.3f}"
+    else:
+        equation = f"y = {slope:.3f}x - {abs(intercept):.3f}"
     
     return {
-        'pearson_r': pearson_r,
-        'pearson_p': pearson_p,
-        'spearman_r': spearman_r,
-        'spearman_p': spearman_p,
-        'r_squared': r_squared
+        'correlation_r': correlation_r,
+        'slope': slope,
+        'intercept': intercept,
+        'equation': equation
     }
 
 def create_scatter_plot(df, x_col, y_col, title_suffix=""):
@@ -48,20 +52,20 @@ def create_scatter_plot(df, x_col, y_col, title_suffix=""):
         labels={x_col: x_col, y_col: y_col}
     )
     
-    # Calculate correlation metrics
-    metrics = calculate_correlation_metrics(df[x_col], df[y_col])
+    # Calculate correlation and regression
+    metrics = calculate_correlation_and_regression(df[x_col], df[y_col])
     
-    # Add annotation with correlation info
+    # Add annotation with correlation and regression equation
     fig.add_annotation(
         x=0.02, y=0.98,
         xref="paper", yref="paper",
-        text=f"Pearson r = {metrics['pearson_r']:.3f}<br>" +
-             f"R² = {metrics['r_squared']:.3f}<br>" +
-             f"p-value = {metrics['pearson_p']:.3e}",
+        text=f"相関係数 r = {metrics['correlation_r']:.3f}<br>" +
+             f"回帰式: {metrics['equation']}",
         showarrow=False,
         bgcolor="rgba(255,255,255,0.8)",
         bordercolor="black",
-        borderwidth=1
+        borderwidth=1,
+        font=dict(size=12)
     )
     
     return fig, metrics
@@ -91,8 +95,8 @@ def analyze_causation_indicators(df, x_col, y_col):
                 for keyword in ['time', 'date', 'year', 'month', 'day', 'age'])]
     
     # 2. Strength of correlation
-    metrics = calculate_correlation_metrics(df[x_col], df[y_col])
-    correlation_strength = abs(metrics['pearson_r'])
+    metrics = calculate_correlation_and_regression(df[x_col], df[y_col])
+    correlation_strength = abs(metrics['correlation_r'])
     
     if correlation_strength > 0.7:
         strength_assessment = "強い相関"
@@ -116,7 +120,7 @@ def analyze_causation_indicators(df, x_col, y_col):
         y_pred = lr.fit(X_reshaped, df[y_col]).predict(X_reshaped)
         residuals = df[y_col] - y_pred
         
-        # Durbin-Watson test for autocorrelation
+        # Simple residual analysis
         try:
             from scipy.stats import jarque_bera
             jb_stat, jb_p = jarque_bera(residuals)
@@ -396,17 +400,12 @@ def main():
             fig, metrics = create_scatter_plot(analysis_df, x_variable, y_variable)
             st.plotly_chart(fig, use_container_width=True)
             
-            # Display correlation metrics
-            col1, col2, col3, col4 = st.columns(4)
+            # Display correlation and regression info
+            col1, col2 = st.columns(2)
             with col1:
-                st.metric("Pearson相関係数", f"{metrics['pearson_r']:.3f}")
+                st.metric("相関係数", f"{metrics['correlation_r']:.3f}")
             with col2:
-                st.metric("Spearman相関係数", f"{metrics['spearman_r']:.3f}")
-            with col3:
-                st.metric("決定係数 (R²)", f"{metrics['r_squared']:.3f}")
-            with col4:
-                p_value_text = "< 0.001" if metrics['pearson_p'] < 0.001 else f"{metrics['pearson_p']:.3f}"
-                st.metric("p値", p_value_text)
+                st.metric("回帰式", metrics['equation'])
             
             # Causation analysis
             indicators = analyze_causation_indicators(analysis_df, x_variable, y_variable)
@@ -476,10 +475,31 @@ def main():
                     # Add horizontal line at y=0
                     fig_residuals.add_hline(y=0, line_dash="dash", line_color="red", row=1, col=1)
                     
-                    # Q-Q plot
-                    qq_fig = ff.create_qq(residuals, sample=residuals, title="")
-                    for trace in qq_fig.data:
-                        fig_residuals.add_trace(trace, row=1, col=2)
+                    # Q-Q plot (simplified version)
+                    from scipy import stats as scipy_stats
+                    qq_data = scipy_stats.probplot(residuals, dist="norm")
+                    fig_residuals.add_trace(
+                        go.Scatter(
+                            x=qq_data[0][0], 
+                            y=qq_data[0][1],
+                            mode='markers',
+                            name='Q-Q Plot',
+                            showlegend=False
+                        ),
+                        row=1, col=2
+                    )
+                    # Add reference line for Q-Q plot
+                    fig_residuals.add_trace(
+                        go.Scatter(
+                            x=qq_data[0][0],
+                            y=qq_data[1][0] * qq_data[0][0] + qq_data[1][1],
+                            mode='lines',
+                            name='理論分布',
+                            line=dict(color='red', dash='dash'),
+                            showlegend=False
+                        ),
+                        row=1, col=2
+                    )
                     
                     fig_residuals.update_layout(
                         title="残差分析",
