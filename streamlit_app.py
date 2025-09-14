@@ -225,7 +225,22 @@ def main():
     統計的相関があっても、必ずしも因果関係があるとは限らないことを理解し、適切な解釈を行うためのガイダンスを提供します。
     """)
     
-    # Add educational content about spurious correlation
+    # File upload section
+    st.header("📁 データのアップロード")
+    uploaded_file = st.file_uploader(
+        "Excel (.xlsx) または CSV (.csv) ファイルをアップロードしてください",
+        type=['xlsx', 'csv'],
+        help="分析したいデータファイルを選択してください"
+    )
+    
+    # Demo data checkbox (placed below upload form as requested)
+    use_demo_data = st.checkbox(
+        "デモデータを使用する",
+        value=False,
+        help="サンプルデータを使用して機能を試すことができます"
+    )
+    
+    # Add educational content about spurious correlation (moved here)
     with st.expander("📚 疑似相関（擬似相関）のワンポイントレッスン"):
         st.markdown("""
         ### 疑似相関とは
@@ -270,20 +285,6 @@ def main():
         
         このような視点を持つことで、より適切な結論を導くことができます。
         """)
-    
-    # File upload section
-    uploaded_file = st.file_uploader(
-        "Excel または CSV ファイルをアップロードしてください",
-        type=['xlsx', 'csv'],
-        help="分析したいデータファイルを選択してください"
-    )
-    
-    # Demo data checkbox (placed below upload form as requested)
-    use_demo_data = st.checkbox(
-        "デモデータを使用する",
-        value=False,
-        help="サンプルデータを使用して機能を試すことができます"
-    )
     
     # Load data
     if uploaded_file is not None:
