@@ -272,9 +272,8 @@ def main():
         """)
     
     # File upload section
-    st.header("📁 データのアップロード")
     uploaded_file = st.file_uploader(
-        "Excel (.xlsx) または CSV (.csv) ファイルをアップロードしてください",
+        "Excel または CSV ファイルをアップロードしてください",
         type=['xlsx', 'csv'],
         help="分析したいデータファイルを選択してください"
     )
