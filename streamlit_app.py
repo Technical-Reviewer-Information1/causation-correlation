@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 st.set_page_config(
-    page_title="因果関係と疑似相関分析",
+    page_title="因果関係と疑似相関",
     page_icon="📊",
     layout="wide"
 )
@@ -216,7 +216,7 @@ def display_causation_guidance(x_col, y_col, indicators):
         st.write(f"• {rec}")
 
 def main():
-    st.title("📊 因果関係と疑似相関分析（pp.31-33）")
+    st.title("📊 因果関係と疑似相関（pp.31-33）")
     st.caption("Created by Dit-Lab.(Daiki ITO)")
     st.caption("Supported by Tomoaki ATSUMI")
     
