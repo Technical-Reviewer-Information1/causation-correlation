@@ -270,6 +270,12 @@
         : '今回はやや偏りました。<strong>人数が少ないと偏ることがあります。</strong>何度か押して、人数が多いほど安定することを確かめてください。');
   }
 
+  /* 本文の問題 */
+  function drawBook() {
+    if (!document.getElementById('bookBox')) return;
+    window.Quiz.choice('bookBox', 'bookNote', [{"k": "ア", "q": "相関関係と因果関係について、一般的に言えることは。", "ch": ["2つの変数に相関関係があるとき、その2つの変数には必ず因果関係がある", "2つの変数に相関関係があっても、その2つの変数に必ず因果関係があるとは限らない", "2つの変数に相関関係がないとき、その2つの変数には必ず因果関係がある", "2つの変数が相関関係になくても、その2つの変数に必ず因果関係がないとは限らない"], "a": 1, "why": "<strong>相関があっても因果があるとは限りません。</strong>これがこの節でいちばん大事な考え方です。"}, {"k": "イ", "q": "家庭学習時間とテストの点数に相関が見られた場合、どういえるか。", "ch": ["相関関係があるため、交絡因子は存在しない", "家庭学習時間の増加が必ず点数の向上を引き起こすため、交絡因子は存在しない", "生徒の基礎学力や学習環境などの交絡因子が存在することが考えられるため、確実な因果関係があるとはいえない", "生徒の生活習慣などの交絡因子が存在することが考えられるため、確実な相関関係があるとはいえない"], "a": 2, "why": "第3の要因（<strong>交絡因子</strong>）が両方に影響している可能性があります。③は「相関関係がいえない」としている点が誤り（相関は実際に見えています）。"}, {"k": "ウ", "q": "血圧と年収の散布図から読み取れることとして最も適当なものは。", "ch": ["高血圧になると収入が上がるという因果関係が結論づけられる", "血圧と年収の相関は年齢層によって異なるため、図1から相関を判断することはできない", "血圧と年収との間には正の相関がみられるが、因果関係があるとは断定できない", "血圧と年収との間に因果関係や相関関係があると結論づけることはできない"], "a": 2, "why": "実際には<strong>年齢</strong>という交絡因子が両方を押し上げています。相関は「ある」、因果は「断定できない」が正しい言い方です。"}], "本文の答えは【ア】①　【イ】②　【ウ】② です。");
+  }
+
   function init() {
     document.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click', () => showCase(+b.dataset.case)));
     $('strat').addEventListener('input', drawStrat);
@@ -282,6 +288,7 @@
     $('runTrial').addEventListener('click', runTrial);
     $('resetTrial').addEventListener('click', () => { trial = null; drawTrial(); });
     showCase(0); startP(); startJ(); drawTrial();
+    drawBook();
     if (window.Terms) { window.Terms.glossary(document.getElementById('glossBox'), ["相関関係", "因果関係", "交絡因子", "擬似相関", "相関係数", "散布図"]); window.Terms.attach(); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
