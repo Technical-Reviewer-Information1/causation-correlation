@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>因果関係と擬似相関｜情報Ⅰ共通テスト対策問題集</title>
+<meta name="description" content="「関係がありそう」は「原因である」とはちがいます。かくれた第3の変数をそろえると相関が消えるようすを、自分の手で確かめましょう。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%2315181c%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 font-family=%22monospace%22 fill=%22%23fff%22 text-anchor=%22middle%22%3E01%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="inner">
+    <span class="eyebrow">第 1 章　データの活用　1-9</span>
+    <h1>因果関係と擬似相関（pp.31-33）</h1>
+    <p class="lead">「関係がありそう」は「原因である」とはちがいます。かくれた第3の変数をそろえると相関が消えるようすを、自分の手で確かめましょう。</p>
+    <p class="credit">Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="step" id="step1">
+    <h2><span class="no">STEP 1</span>相関はあるのに、原因ではない</h2>
+    <p class="desc">実際に相関が出る有名な組み合わせです。まずは散布図を見て、相関係数を確かめてください。</p>
+
+    <div class="seg" role="group" aria-label="事例の切り替え">
+      <button data-case="0" aria-pressed="true">アイスと水難事故</button>
+      <button data-case="1" aria-pressed="false">消防車と被害額</button>
+      <button data-case="2" aria-pressed="false">足の大きさと漢字力</button>
+    </div>
+
+    <div class="grid c2" style="margin-top:16px">
+      <div class="panel">
+        <h3 id="caseTitle"></h3>
+        <div id="caseChart"></div>
+        <div class="legendrow" id="caseLegend"></div>
+      </div>
+      <div class="panel">
+        <h3>相関係数</h3>
+        <div class="rbig" id="caseR">—</div>
+        <p class="why" id="caseWhy" style="margin-top:10px"></p>
+        <div class="note warn" style="margin-top:12px">
+          <strong>本当の原因は別にあります。</strong>下の STEP 2 で、その第3の変数をそろえてみましょう。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step2">
+    <h2><span class="no">STEP 2</span>第3の変数をそろえると相関が消える</h2>
+    <p class="desc">かくれた変数（<span id="lurkName"></span>）が近い日だけを取り出します。<strong>範囲をせまくするほど、相関がどうなるか</strong>を見てください。</p>
+
+    <div class="panel">
+      <label class="fld" for="strat">取り出す範囲の広さ：<span class="mono" id="stratV"></span></label>
+      <input type="range" id="strat" min="1" max="10" step="1" value="10">
+      <div class="grid c2" style="margin-top:14px">
+        <div>
+          <div id="stratChart"></div>
+          <div class="legendrow" id="stratLegend"></div>
+        </div>
+        <div>
+          <div class="metrics">
+            <div class="metric"><div class="k">全体の相関係数</div><div class="v" id="rAll">—</div></div>
+            <div class="metric"><div class="k">そろえたときの相関係数</div><div class="v" id="rStrat">—</div></div>
+            <div class="metric"><div class="k">取り出した日数</div><div class="v" id="nStrat">—</div></div>
+          </div>
+          <div class="note" id="stratNote" style="margin-top:14px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h3>関係の図</h3>
+      <div class="diagram" id="diagram"></div>
+      <p class="why" style="margin-top:8px">2つの変数の<strong>両方に影響する変数</strong>を交絡変数（こうらくへんすう）といいます。これがあると、直接の関係がなくても相関が出ます。</p>
+    </div>
+  </section>
+
+  <section class="step" id="step3">
+    <h2><span class="no">STEP 3</span>「因果ではない」の3パターン</h2>
+    <p class="desc">相関があるのに因果とはいえない理由は、おおむね次の3つです。例をどれかに分類してください。</p>
+
+    <div class="grid c2">
+      <div>
+        <div class="patcard"><b>① 交絡（第3の変数）</b><p>2つの両方に影響する別の原因がある。例：気温がアイスの売上と水難事故の両方を増やす。</p></div>
+        <div class="patcard"><b>② 逆の因果</b><p>原因と結果が逆。例：火事が大きいから消防車が多く来る。</p></div>
+        <div class="patcard"><b>③ 偶然</b><p>たまたま数字が似た動きをしただけ。データが少ないときに起きやすい。</p></div>
+      </div>
+      <div class="panel">
+        <div class="qhead">
+          <span class="badge" id="pProgress">1 / 1</span>
+          <span class="badge">正解 <span class="score" id="pScore">0</span></span>
+        </div>
+        <div class="card-q"><div class="q-scene" id="pText"></div></div>
+        <div class="choice4" id="pChoices"></div>
+        <div class="note" id="pFb" hidden style="margin-top:12px"></div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn primary" id="pNext" disabled>次の問題</button>
+          <button class="btn ghost" id="pReset">最初から</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step4">
+    <h2><span class="no">STEP 4</span>この主張は正しいか</h2>
+    <p class="desc">データから言えることと、言いすぎていることを区別してください。</p>
+    <div class="panel">
+      <div class="qhead">
+        <span class="badge" id="jProgress">1 / 1</span>
+        <span class="badge">正解 <span class="score" id="jScore">0</span></span>
+      </div>
+      <div class="card-q"><div class="q-scene" id="jText"></div></div>
+      <div class="btn-row" style="justify-content:center;gap:14px">
+        <button class="btn" id="jOk" style="min-width:150px">データから言える</button>
+        <button class="btn" id="jNg" style="min-width:150px">言いすぎ</button>
+      </div>
+      <div class="note" id="jFb" hidden style="margin-top:12px"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn primary" id="jNext" disabled>次の問題</button>
+        <button class="btn ghost" id="jReset">最初から</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step5">
+    <h2><span class="no">STEP 5</span>では、どうすれば因果が確かめられるか</h2>
+    <p class="desc">くじ引きで2つのグループに分ける（ランダム化）と、かくれた変数の影響も自動的に両グループへ均等に散らばります。</p>
+    <div class="panel">
+      <div class="btn-row">
+        <button class="btn" id="runTrial">40人をくじ引きで2グループに分ける</button>
+        <button class="btn ghost" id="resetTrial">やり直す</button>
+      </div>
+      <div id="trialChart" style="margin-top:14px"></div>
+      <div class="note" id="trialNote" style="margin-top:12px"></div>
+    </div>
+    <div class="note info" style="margin-top:14px">
+      因果を確かめる基本は<strong>比べる相手（対照群）をつくること</strong>と<strong>くじ引きで分けること</strong>。
+      これができない場合は、交絡になりそうな変数をそろえて分析します（STEP 2 でやったことです）。
+    </div>
+  </section>
+
+  <section class="step">
+    <h2><span class="no">まとめ</span>相関を見たら疑う3点</h2>
+    <ol style="margin:0;padding-left:1.3em;color:var(--ink-2);font-size:.92rem;line-height:2.05">
+      <li><strong>両方に効く第3の変数はないか</strong>（交絡）。季節・年齢・地域・所得はよくある犯人です。</li>
+      <li><strong>原因と結果が逆ではないか</strong>（逆の因果）。</li>
+      <li><strong>たまたまではないか</strong>（偶然）。データの数が少なくないか確かめます。</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  情報Ⅰ 共通テスト対策問題集（技術評論社）連動Webアプリ　/　Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI
+</footer>
+
+<script src="js/chart.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

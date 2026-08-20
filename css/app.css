@@ -1,0 +1,18 @@
+.qhead{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px}
+.card-q{border:1px solid var(--rule); background:var(--paper); padding:18px; margin-bottom:14px}
+.q-scene{font-size:1rem; font-weight:700; line-height:1.9}
+.choice4{display:grid; gap:8px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.choice4 .btn{text-align:left; line-height:1.6; padding:10px 13px}
+.choice4 .btn.correct{background:var(--ok-bg); border-color:var(--ok); color:var(--ok)}
+.choice4 .btn.wrong{background:var(--ng-bg); border-color:var(--ng); color:var(--ng)}
+.choice4.locked{pointer-events:none}
+input[type=range]{width:100%; accent-color:var(--accent); height:34px}
+.rbig{font-family:var(--mono); font-size:2rem; font-weight:700; line-height:1.25}
+.why{font-size:.85rem; color:var(--ink-2); line-height:1.85}
+.legendrow{display:flex; gap:14px; flex-wrap:wrap; font-size:.8rem; color:var(--ink-2); margin-top:8px}
+.legendrow i{display:inline-block; width:11px; height:11px; margin-right:5px; border-radius:50%}
+.diagram{border:1px solid var(--rule-2); background:var(--paper); padding:10px}
+.diagram svg{display:block; margin:0 auto; max-width:100%}
+.patcard{border:1px solid var(--rule); background:var(--paper); padding:14px; margin-bottom:10px}
+.patcard b{display:block; margin-bottom:4px}
+.patcard p{font-size:.87rem; color:var(--ink-2); margin:0}
