@@ -254,5 +254,46 @@
     return s;
   }
 
-  global.Chart = { bar, line, pie, scatter, hist, box5, PALETTE, fmt };
+
+  /* ---------- レーダーチャート ---------- */
+  function radar(box, o) {
+    const W = o.W || 420, H = o.H || 340;
+    const s = svgRoot(box, W, H, o.aria || 'レーダーチャート');
+    const cx = W / 2, cy = H / 2 + 6, R = Math.min(W, H) * 0.33;
+    const axes = o.axes, n = axes.length, max = o.max || 100;
+    const ang = i => -Math.PI / 2 + i * 2 * Math.PI / n;
+    for (let k = 1; k <= 4; k++) {
+      const rr = R * k / 4;
+      const pts = axes.map((_, i) => [cx + rr * Math.cos(ang(i)), cy + rr * Math.sin(ang(i))]);
+      s.appendChild(el('polygon', { points: pts.map(p => p.join(',')).join(' '),
+        fill: 'none', stroke: GRID, 'stroke-width': 1 }));
+    }
+    axes.forEach((a, i) => {
+      s.appendChild(el('line', { x1: cx, y1: cy, x2: cx + R * Math.cos(ang(i)), y2: cy + R * Math.sin(ang(i)),
+        stroke: RULE, 'stroke-width': 1 }));
+      const lx = cx + (R + 22) * Math.cos(ang(i)), ly = cy + (R + 16) * Math.sin(ang(i));
+      s.appendChild(el('text', { x: lx, y: ly, 'text-anchor': 'middle', 'dominant-baseline': 'middle',
+        'font-size': 11, fill: INK2 }, a));
+    });
+    (o.series || []).forEach((se, si) => {
+      const col = se.color || PALETTE[si % PALETTE.length];
+      const pts = se.values.map((v, i) => {
+        const rr = R * Math.max(0, Math.min(1, v / max));
+        return [cx + rr * Math.cos(ang(i)), cy + rr * Math.sin(ang(i))];
+      });
+      s.appendChild(el('polygon', { points: pts.map(p => p.join(',')).join(' '),
+        fill: col, 'fill-opacity': .13, stroke: col, 'stroke-width': 2.2 }));
+      pts.forEach(p => s.appendChild(el('circle', { cx: p[0], cy: p[1], r: 3.2, fill: col })));
+    });
+    (o.series || []).forEach((se, si) => {
+      if (!se.name) return;
+      s.appendChild(el('rect', { x: 12, y: 14 + si * 18, width: 11, height: 11,
+        fill: se.color || PALETTE[si % PALETTE.length] }));
+      s.appendChild(el('text', { x: 29, y: 20 + si * 18, 'dominant-baseline': 'middle',
+        'font-size': 11, fill: INK2 }, se.name));
+    });
+    return s;
+  }
+
+  global.Chart = { bar, line, pie, scatter, hist, box5, radar, PALETTE, fmt };
 })(window);

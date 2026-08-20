@@ -282,6 +282,7 @@
     $('runTrial').addEventListener('click', runTrial);
     $('resetTrial').addEventListener('click', () => { trial = null; drawTrial(); });
     showCase(0); startP(); startJ(); drawTrial();
+    if (window.Terms) { window.Terms.glossary(document.getElementById('glossBox'), ["相関関係", "因果関係", "交絡因子", "擬似相関", "相関係数", "散布図"]); window.Terms.attach(); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
